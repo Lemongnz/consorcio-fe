@@ -21,8 +21,10 @@ import { cn } from '@/lib/utils'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
 
 const navigation = [
-  { name: 'Dashboard', href: ROUTES.DASHBOARD, icon: Home },
+  { name: 'Chat IA', href: ROUTES.HOME, icon: Home },
+  { name: 'Dashboard', href: '/dashboard', icon: BarChart3 },
   { name: 'Edificios', href: ROUTES.BUILDINGS, icon: Building2 },
+  { name: 'Unidades', href: ROUTES.UNITS, icon: Home },
   { name: 'Tickets', href: ROUTES.TICKETS, icon: Ticket },
   { name: 'Inspecciones', href: ROUTES.INSPECTIONS, icon: Search },
   { name: 'Órdenes de Trabajo', href: ROUTES.WORKORDERS, icon: Wrench },
