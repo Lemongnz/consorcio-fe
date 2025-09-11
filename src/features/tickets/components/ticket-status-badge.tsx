@@ -1,4 +1,9 @@
-import { TicketStatus, TicketPriority, TICKET_STATUS_LABELS, TICKET_PRIORITY_LABELS } from '../types/ticket'
+import {
+  TicketStatus,
+  TicketPriority,
+  TICKET_STATUS_LABELS,
+  TICKET_PRIORITY_LABELS,
+} from '../types/ticket'
 import { cn } from '@/lib/utils'
 
 interface StatusBadgeProps {
@@ -14,13 +19,13 @@ interface PriorityBadgeProps {
 export function TicketStatusBadge({ status, className }: StatusBadgeProps) {
   const getStatusColor = (status: TicketStatus) => {
     switch (status) {
-      case 'open':
+      case 'OPEN':
         return 'bg-blue-100 text-blue-800 border-blue-200'
-      case 'in_progress':
+      case 'IN_PROGRESS':
         return 'bg-yellow-100 text-yellow-800 border-yellow-200'
-      case 'resolved':
+      case 'COMPLETED':
         return 'bg-green-100 text-green-800 border-green-200'
-      case 'closed':
+      case 'CLOSED':
         return 'bg-gray-100 text-gray-800 border-gray-200'
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200'
@@ -30,7 +35,7 @@ export function TicketStatusBadge({ status, className }: StatusBadgeProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border',
+        'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium',
         getStatusColor(status),
         className
       )}
@@ -40,16 +45,19 @@ export function TicketStatusBadge({ status, className }: StatusBadgeProps) {
   )
 }
 
-export function TicketPriorityBadge({ priority, className }: PriorityBadgeProps) {
+export function TicketPriorityBadge({
+  priority,
+  className,
+}: PriorityBadgeProps) {
   const getPriorityColor = (priority: TicketPriority) => {
     switch (priority) {
-      case 'low':
+      case 'LOW':
         return 'bg-gray-100 text-gray-800 border-gray-200'
-      case 'medium':
+      case 'MEDIUM':
         return 'bg-blue-100 text-blue-800 border-blue-200'
-      case 'high':
+      case 'HIGH':
         return 'bg-orange-100 text-orange-800 border-orange-200'
-      case 'urgent':
+      case 'URGENT':
         return 'bg-red-100 text-red-800 border-red-200'
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200'
@@ -59,7 +67,7 @@ export function TicketPriorityBadge({ priority, className }: PriorityBadgeProps)
   return (
     <span
       className={cn(
-        'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border',
+        'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium',
         getPriorityColor(priority),
         className
       )}

@@ -37,12 +37,11 @@ describe('Buildings Store', () => {
     const newBuildingData = {
       name: 'Test Building',
       address: 'Test Address 123',
-      units: 20,
-      floors: 5,
-      administrator: 'Test Admin',
-      phone: '+54 11 1234-5678',
-      email: 'admin@test.com',
-      description: 'Test building description',
+      city: 'Buenos Aires',
+      country: 'Argentina',
+      notes: 'Test building description',
+      totalUnits: 20,
+      totalFloors: 5,
     }
 
     await createBuilding(newBuildingData)
@@ -60,12 +59,11 @@ describe('Buildings Store', () => {
     const newBuildingData = {
       name: 'Original Building',
       address: 'Original Address',
-      units: 6,
-      floors: 3,
-      administrator: 'Original Admin',
-      phone: '+54 11 1111-1111',
-      email: 'original@test.com',
-      description: 'Original description',
+      city: 'Buenos Aires',
+      country: 'Argentina',
+      notes: 'Original description',
+      totalUnits: 6,
+      totalFloors: 3,
     }
 
     await createBuilding(newBuildingData)
@@ -73,16 +71,15 @@ describe('Buildings Store', () => {
     const buildingId = useBuildingsStore.getState().buildings[0].id
 
     const updateData = {
-      id: buildingId,
       name: 'Updated Building',
-      description: 'Updated description',
+      notes: 'Updated description',
     }
 
-    await updateBuilding(updateData)
+    await updateBuilding(buildingId, updateData)
 
     const state = useBuildingsStore.getState()
     expect(state.buildings[0].name).toBe('Updated Building')
-    expect(state.buildings[0].description).toBe('Updated description')
+    expect(state.buildings[0].notes).toBe('Updated description')
     expect(state.buildings[0].address).toBe('Original Address') // Should remain unchanged
   })
 
@@ -93,12 +90,11 @@ describe('Buildings Store', () => {
     const newBuildingData = {
       name: 'Building to Delete',
       address: 'Delete Address',
-      units: 4,
-      floors: 2,
-      administrator: 'Delete Admin',
-      phone: '+54 11 2222-2222',
-      email: 'delete@test.com',
-      description: 'Building to be deleted',
+      city: 'Buenos Aires',
+      country: 'Argentina',
+      notes: 'Building to be deleted',
+      totalUnits: 4,
+      totalFloors: 2,
     }
 
     await createBuilding(newBuildingData)
@@ -116,14 +112,13 @@ describe('Buildings Store', () => {
       id: '1',
       name: 'Test Building',
       address: 'Test Address',
-      units: 6,
-      floors: 3,
-      administrator: 'Test Admin',
-      phone: '+54 11 1234-5678',
-      email: 'admin@test.com',
-      description: 'Test description',
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      city: 'Buenos Aires',
+      country: 'Argentina',
+      notes: 'Test description',
+      totalUnits: 6,
+      totalFloors: 3,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
 
     const { selectBuilding } = useBuildingsStore.getState()
@@ -138,14 +133,13 @@ describe('Buildings Store', () => {
       id: '1',
       name: 'Test Building',
       address: 'Test Address',
-      units: 6,
-      floors: 3,
-      administrator: 'Test Admin',
-      phone: '+54 11 1234-5678',
-      email: 'admin@test.com',
-      description: 'Test description',
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      city: 'Buenos Aires',
+      country: 'Argentina',
+      notes: 'Test description',
+      totalUnits: 6,
+      totalFloors: 3,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
 
     const { selectBuilding } = useBuildingsStore.getState()

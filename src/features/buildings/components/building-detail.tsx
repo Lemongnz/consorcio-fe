@@ -1,4 +1,13 @@
-import { Building2, MapPin, Users, Layers, User, Phone, Mail, Calendar } from 'lucide-react'
+import {
+  Building2,
+  MapPin,
+  Users,
+  Layers,
+  User,
+  Phone,
+  Mail,
+  Calendar,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Building } from '../types/building'
@@ -9,7 +18,11 @@ interface BuildingDetailProps {
   onBack: () => void
 }
 
-export function BuildingDetail({ building, onEdit, onBack }: BuildingDetailProps) {
+export function BuildingDetail({
+  building,
+  onEdit,
+  onBack,
+}: BuildingDetailProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -19,18 +32,16 @@ export function BuildingDetail({ building, onEdit, onBack }: BuildingDetailProps
           </Button>
           <div>
             <h1 className="text-3xl font-bold">{building.name}</h1>
-            <p className="text-muted-foreground flex items-center gap-1">
+            <p className="flex items-center gap-1 text-muted-foreground">
               <MapPin className="h-4 w-4" />
               {building.address}
             </p>
           </div>
         </div>
-        <Button onClick={onEdit}>
-          Editar Edificio
-        </Button>
+        <Button onClick={onEdit}>Editar Edificio</Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Información General */}
         <Card>
           <CardHeader>
@@ -44,21 +55,23 @@ export function BuildingDetail({ building, onEdit, onBack }: BuildingDetailProps
               <Users className="h-4 w-4 text-muted-foreground" />
               <div>
                 <p className="text-sm text-muted-foreground">Unidades</p>
-                <p className="font-medium">{building.units}</p>
+                <p className="font-medium">{building.totalUnits || 0}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Layers className="h-4 w-4 text-muted-foreground" />
               <div>
                 <p className="text-sm text-muted-foreground">Pisos</p>
-                <p className="font-medium">{building.floors}</p>
+                <p className="font-medium">{building.totalFloors || 0}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Calendar className="h-4 w-4 text-muted-foreground" />
               <div>
                 <p className="text-sm text-muted-foreground">Creado</p>
-                <p className="font-medium">{building.createdAt.toLocaleDateString()}</p>
+                <p className="font-medium">
+                  {new Date(building.createdAt).toLocaleDateString()}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -75,20 +88,20 @@ export function BuildingDetail({ building, onEdit, onBack }: BuildingDetailProps
           <CardContent className="space-y-4">
             <div>
               <p className="text-sm text-muted-foreground">Nombre</p>
-              <p className="font-medium">{building.administrator}</p>
+              <p className="font-medium">No disponible</p>
             </div>
             <div className="flex items-center gap-3">
               <Phone className="h-4 w-4 text-muted-foreground" />
               <div>
                 <p className="text-sm text-muted-foreground">Teléfono</p>
-                <p className="font-medium">{building.phone}</p>
+                <p className="font-medium">No disponible</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Mail className="h-4 w-4 text-muted-foreground" />
               <div>
                 <p className="text-sm text-muted-foreground">Email</p>
-                <p className="font-medium">{building.email}</p>
+                <p className="font-medium">No disponible</p>
               </div>
             </div>
           </CardContent>
@@ -100,19 +113,21 @@ export function BuildingDetail({ building, onEdit, onBack }: BuildingDetailProps
             <CardTitle>Descripción</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground leading-relaxed">
-              {building.description}
+            <p className="leading-relaxed text-muted-foreground">
+              {building.notes || 'Sin descripción disponible'}
             </p>
           </CardContent>
         </Card>
       </div>
 
       {/* Estadísticas adicionales */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         <Card>
           <CardContent className="p-6">
             <div className="text-center">
-              <p className="text-2xl font-bold text-primary">{building.units}</p>
+              <p className="text-2xl font-bold text-primary">
+                {building.totalUnits || 0}
+              </p>
               <p className="text-sm text-muted-foreground">Total Unidades</p>
             </div>
           </CardContent>
@@ -120,7 +135,9 @@ export function BuildingDetail({ building, onEdit, onBack }: BuildingDetailProps
         <Card>
           <CardContent className="p-6">
             <div className="text-center">
-              <p className="text-2xl font-bold text-primary">{building.floors}</p>
+              <p className="text-2xl font-bold text-primary">
+                {building.totalFloors || 0}
+              </p>
               <p className="text-sm text-muted-foreground">Pisos</p>
             </div>
           </CardContent>
@@ -128,7 +145,11 @@ export function BuildingDetail({ building, onEdit, onBack }: BuildingDetailProps
         <Card>
           <CardContent className="p-6">
             <div className="text-center">
-              <p className="text-2xl font-bold text-primary">{Math.round(building.units / building.floors)}</p>
+              <p className="text-2xl font-bold text-primary">
+                {Math.round(
+                  (building.totalUnits || 0) / (building.totalFloors || 1)
+                )}
+              </p>
               <p className="text-sm text-muted-foreground">Unidades por Piso</p>
             </div>
           </CardContent>
@@ -137,7 +158,10 @@ export function BuildingDetail({ building, onEdit, onBack }: BuildingDetailProps
           <CardContent className="p-6">
             <div className="text-center">
               <p className="text-2xl font-bold text-primary">
-                {Math.floor((Date.now() - building.createdAt.getTime()) / (1000 * 60 * 60 * 24 * 365))}
+                {Math.floor(
+                  (Date.now() - new Date(building.createdAt).getTime()) /
+                    (1000 * 60 * 60 * 24 * 365)
+                )}
               </p>
               <p className="text-sm text-muted-foreground">Años en Sistema</p>
             </div>

@@ -93,7 +93,7 @@ export const useUnitsStore = create<UnitsState>((set) => ({
     try {
       await new Promise(resolve => setTimeout(resolve, 500))
       set({ units: mockUnits, isLoading: false })
-    } catch (error) {
+    } catch (_error) {
       set({ error: 'Error al cargar unidades', isLoading: false })
     }
   },
@@ -104,7 +104,7 @@ export const useUnitsStore = create<UnitsState>((set) => ({
       await new Promise(resolve => setTimeout(resolve, 500))
       const filteredUnits = mockUnits.filter(unit => unit.buildingId === buildingId)
       set({ units: filteredUnits, isLoading: false })
-    } catch (error) {
+    } catch (_error) {
       set({ error: 'Error al cargar unidades del edificio', isLoading: false })
     }
   },
@@ -125,7 +125,7 @@ export const useUnitsStore = create<UnitsState>((set) => ({
         units: [...state.units, newUnit],
         isLoading: false
       }))
-    } catch (error) {
+    } catch (_error) {
       set({ error: 'Error al crear unidad', isLoading: false })
     }
   },
@@ -145,7 +145,7 @@ export const useUnitsStore = create<UnitsState>((set) => ({
           : state.selectedUnit,
         isLoading: false
       }))
-    } catch (error) {
+    } catch (_error) {
       set({ error: 'Error al actualizar unidad', isLoading: false })
     }
   },
@@ -165,7 +165,7 @@ export const useUnitsStore = create<UnitsState>((set) => ({
           : state.selectedUnit,
         isLoading: false
       }))
-    } catch (error) {
+    } catch (_error) {
       set({ error: 'Error al actualizar estado de la unidad', isLoading: false })
     }
   },
@@ -179,7 +179,7 @@ export const useUnitsStore = create<UnitsState>((set) => ({
         selectedUnit: state.selectedUnit?.id === id ? null : state.selectedUnit,
         isLoading: false
       }))
-    } catch (error) {
+    } catch (_error) {
       set({ error: 'Error al eliminar unidad', isLoading: false })
     }
   },

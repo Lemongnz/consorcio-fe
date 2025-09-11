@@ -73,7 +73,7 @@ export const useWorkOrdersStore = create<WorkOrdersState>((set) => ({
     try {
       await new Promise(resolve => setTimeout(resolve, 500))
       set({ workOrders: mockWorkOrders, isLoading: false })
-    } catch (error) {
+    } catch (_error) {
       set({ error: 'Error al cargar órdenes de trabajo', isLoading: false })
     }
   },
@@ -94,7 +94,7 @@ export const useWorkOrdersStore = create<WorkOrdersState>((set) => ({
         workOrders: [...state.workOrders, newWorkOrder],
         isLoading: false
       }))
-    } catch (error) {
+    } catch (_error) {
       set({ error: 'Error al crear orden de trabajo', isLoading: false })
     }
   },
@@ -114,7 +114,7 @@ export const useWorkOrdersStore = create<WorkOrdersState>((set) => ({
           : state.selectedWorkOrder,
         isLoading: false
       }))
-    } catch (error) {
+    } catch (_error) {
       set({ error: 'Error al actualizar orden de trabajo', isLoading: false })
     }
   },
@@ -137,7 +137,7 @@ export const useWorkOrdersStore = create<WorkOrdersState>((set) => ({
           : state.selectedWorkOrder,
         isLoading: false
       }))
-    } catch (error) {
+    } catch (_error) {
       set({ error: 'Error al actualizar estado de la orden', isLoading: false })
     }
   },
@@ -151,7 +151,7 @@ export const useWorkOrdersStore = create<WorkOrdersState>((set) => ({
         selectedWorkOrder: state.selectedWorkOrder?.id === id ? null : state.selectedWorkOrder,
         isLoading: false
       }))
-    } catch (error) {
+    } catch (_error) {
       set({ error: 'Error al eliminar orden de trabajo', isLoading: false })
     }
   },

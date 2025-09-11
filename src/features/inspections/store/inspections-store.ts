@@ -65,7 +65,7 @@ export const useInspectionsStore = create<InspectionsState>((set) => ({
     try {
       await new Promise(resolve => setTimeout(resolve, 500))
       set({ inspections: mockInspections, isLoading: false })
-    } catch (error) {
+    } catch (_error) {
       set({ error: 'Error al cargar inspecciones', isLoading: false })
     }
   },
@@ -86,7 +86,7 @@ export const useInspectionsStore = create<InspectionsState>((set) => ({
         inspections: [...state.inspections, newInspection],
         isLoading: false
       }))
-    } catch (error) {
+    } catch (_error) {
       set({ error: 'Error al crear inspección', isLoading: false })
     }
   },
@@ -106,7 +106,7 @@ export const useInspectionsStore = create<InspectionsState>((set) => ({
           : state.selectedInspection,
         isLoading: false
       }))
-    } catch (error) {
+    } catch (_error) {
       set({ error: 'Error al actualizar inspección', isLoading: false })
     }
   },
@@ -129,7 +129,7 @@ export const useInspectionsStore = create<InspectionsState>((set) => ({
           : state.selectedInspection,
         isLoading: false
       }))
-    } catch (error) {
+    } catch (_error) {
       set({ error: 'Error al actualizar estado de la inspección', isLoading: false })
     }
   },
@@ -143,7 +143,7 @@ export const useInspectionsStore = create<InspectionsState>((set) => ({
         selectedInspection: state.selectedInspection?.id === id ? null : state.selectedInspection,
         isLoading: false
       }))
-    } catch (error) {
+    } catch (_error) {
       set({ error: 'Error al eliminar inspección', isLoading: false })
     }
   },

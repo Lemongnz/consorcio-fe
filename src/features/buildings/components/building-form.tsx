@@ -1,21 +1,14 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Building, CreateBuildingData } from '../types/building'
-
-const buildingSchema = z.object({
-  name: z.string().min(1, 'El nombre es requerido'),
-  address: z.string().min(1, 'La dirección es requerida'),
-  description: z.string().min(1, 'La descripción es requerida'),
-  units: z.number().min(1, 'Debe tener al menos 1 unidad'),
-  floors: z.number().min(1, 'Debe tener al menos 1 piso'),
-  administrator: z.string().min(1, 'El administrador es requerido'),
-  phone: z.string().min(1, 'El teléfono es requerido'),
-  email: z.string().email('Email inválido')
-})
+import {
+  legacyBuildingSchema,
+  LegacyBuildingFormData,
+  convertLegacyToApi,
+} from '../schemas/building-schema'
 
 interface BuildingFormProps {
   building?: Building
@@ -24,43 +17,52 @@ interface BuildingFormProps {
   isLoading?: boolean
 }
 
-export function BuildingForm({ building, onSubmit, onCancel, isLoading }: BuildingFormProps) {
+export function BuildingForm({
+  building,
+  onSubmit,
+  onCancel,
+  isLoading,
+}: BuildingFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors }
-  } = useForm<CreateBuildingData>({
-    resolver: zodResolver(buildingSchema),
-    defaultValues: building ? {
-      name: building.name,
-      address: building.address,
-      description: building.description,
-      units: building.units,
-      floors: building.floors,
-      administrator: building.administrator,
-      phone: building.phone,
-      email: building.email
-    } : undefined
+    formState: { errors },
+  } = useForm<LegacyBuildingFormData>({
+    resolver: zodResolver(legacyBuildingSchema),
+    defaultValues: building
+      ? {
+          name: building.name,
+          address: building.address,
+          description: building.notes || '',
+          units: building.totalUnits || 0,
+          floors: building.totalFloors || 0,
+          administrator: '',
+          phone: '',
+          email: '',
+        }
+      : undefined,
   })
+
+  const handleFormSubmit = (data: LegacyBuildingFormData) => {
+    const apiData = convertLegacyToApi(data)
+    onSubmit(apiData)
+  }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
-          {building ? 'Editar Edificio' : 'Nuevo Edificio'}
-        </CardTitle>
+        <CardTitle>{building ? 'Editar Edificio' : 'Nuevo Edificio'}</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <label className="text-sm font-medium">Nombre</label>
-              <Input
-                {...register('name')}
-                placeholder="Nombre del edificio"
-              />
+              <Input {...register('name')} placeholder="Nombre del edificio" />
               {errors.name && (
-                <p className="mt-1 text-sm text-destructive">{errors.name.message}</p>
+                <p className="mt-1 text-sm text-destructive">
+                  {errors.name.message}
+                </p>
               )}
             </div>
 
@@ -71,7 +73,9 @@ export function BuildingForm({ building, onSubmit, onCancel, isLoading }: Buildi
                 placeholder="Dirección completa"
               />
               {errors.address && (
-                <p className="mt-1 text-sm text-destructive">{errors.address.message}</p>
+                <p className="mt-1 text-sm text-destructive">
+                  {errors.address.message}
+                </p>
               )}
             </div>
 
@@ -83,7 +87,9 @@ export function BuildingForm({ building, onSubmit, onCancel, isLoading }: Buildi
                 className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               />
               {errors.description && (
-                <p className="mt-1 text-sm text-destructive">{errors.description.message}</p>
+                <p className="mt-1 text-sm text-destructive">
+                  {errors.description.message}
+                </p>
               )}
             </div>
 
@@ -95,7 +101,9 @@ export function BuildingForm({ building, onSubmit, onCancel, isLoading }: Buildi
                 placeholder="Número de unidades"
               />
               {errors.units && (
-                <p className="mt-1 text-sm text-destructive">{errors.units.message}</p>
+                <p className="mt-1 text-sm text-destructive">
+                  {errors.units.message}
+                </p>
               )}
             </div>
 
@@ -107,7 +115,9 @@ export function BuildingForm({ building, onSubmit, onCancel, isLoading }: Buildi
                 placeholder="Número de pisos"
               />
               {errors.floors && (
-                <p className="mt-1 text-sm text-destructive">{errors.floors.message}</p>
+                <p className="mt-1 text-sm text-destructive">
+                  {errors.floors.message}
+                </p>
               )}
             </div>
 
@@ -118,7 +128,9 @@ export function BuildingForm({ building, onSubmit, onCancel, isLoading }: Buildi
                 placeholder="Nombre del administrador"
               />
               {errors.administrator && (
-                <p className="mt-1 text-sm text-destructive">{errors.administrator.message}</p>
+                <p className="mt-1 text-sm text-destructive">
+                  {errors.administrator.message}
+                </p>
               )}
             </div>
 
@@ -129,7 +141,9 @@ export function BuildingForm({ building, onSubmit, onCancel, isLoading }: Buildi
                 placeholder="Teléfono de contacto"
               />
               {errors.phone && (
-                <p className="mt-1 text-sm text-destructive">{errors.phone.message}</p>
+                <p className="mt-1 text-sm text-destructive">
+                  {errors.phone.message}
+                </p>
               )}
             </div>
 
@@ -141,12 +155,14 @@ export function BuildingForm({ building, onSubmit, onCancel, isLoading }: Buildi
                 placeholder="Email de contacto"
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-destructive">{errors.email.message}</p>
+                <p className="mt-1 text-sm text-destructive">
+                  {errors.email.message}
+                </p>
               )}
             </div>
           </div>
 
-          <div className="flex gap-2 justify-end">
+          <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={onCancel}>
               Cancelar
             </Button>

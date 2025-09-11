@@ -37,10 +37,9 @@ describe('Tickets Store', () => {
     const newTicketData = {
       title: 'Test Ticket',
       description: 'Test ticket description',
-      building: 'Test Building',
-      reporter: 'Test Reporter',
-      priority: 'medium' as const,
-      category: 'maintenance' as const,
+      buildingId: 'building-1',
+      type: 'MAINTENANCE' as const,
+      priority: 'MEDIUM' as const,
     }
 
     await createTicket(newTicketData)
@@ -58,20 +57,19 @@ describe('Tickets Store', () => {
     const newTicketData = {
       title: 'Status Test Ticket',
       description: 'Test description',
-      building: 'Test Building',
-      reporter: 'Test Reporter',
-      priority: 'high' as const,
-      category: 'complaint' as const,
+      buildingId: 'building-1',
+      type: 'COMPLAINT' as const,
+      priority: 'HIGH' as const,
     }
 
     await createTicket(newTicketData)
 
     const ticketId = useTicketsStore.getState().tickets[0].id
 
-    await updateTicketStatus(ticketId, 'in_progress')
+    await updateTicketStatus(ticketId, 'IN_PROGRESS')
 
     const state = useTicketsStore.getState()
-    expect(state.tickets[0].status).toBe('in_progress')
+    expect(state.tickets[0].status).toBe('IN_PROGRESS')
     expect(state.tickets[0].updatedAt).toBeInstanceOf(Date)
   })
 
@@ -82,20 +80,19 @@ describe('Tickets Store', () => {
     const newTicketData = {
       title: 'Resolve Test Ticket',
       description: 'Test description',
-      building: 'Test Building',
-      reporter: 'Test Reporter',
-      priority: 'low' as const,
-      category: 'request' as const,
+      buildingId: 'building-1',
+      type: 'REPAIR' as const,
+      priority: 'LOW' as const,
     }
 
     await createTicket(newTicketData)
 
     const ticketId = useTicketsStore.getState().tickets[0].id
 
-    await updateTicketStatus(ticketId, 'resolved')
+    await updateTicketStatus(ticketId, 'COMPLETED')
 
     const state = useTicketsStore.getState()
-    expect(state.tickets[0].status).toBe('resolved')
+    expect(state.tickets[0].status).toBe('COMPLETED')
     expect(state.tickets[0].resolvedAt).toBeInstanceOf(Date)
   })
 
@@ -106,10 +103,9 @@ describe('Tickets Store', () => {
     const newTicketData = {
       title: 'Ticket to Delete',
       description: 'This ticket will be deleted',
-      building: 'Test Building',
-      reporter: 'Test Reporter',
-      priority: 'medium' as const,
-      category: 'maintenance' as const,
+      buildingId: 'building-1',
+      type: 'MAINTENANCE' as const,
+      priority: 'MEDIUM' as const,
     }
 
     await createTicket(newTicketData)
@@ -127,13 +123,14 @@ describe('Tickets Store', () => {
       id: '1',
       title: 'Test Ticket',
       description: 'Test description',
-      status: 'open' as const,
-      priority: 'medium' as const,
-      category: 'maintenance' as const,
-      building: 'Test Building',
-      reporter: 'Test Reporter',
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      status: 'OPEN' as const,
+      priority: 'MEDIUM' as const,
+      type: 'MAINTENANCE' as const,
+      buildingId: 'building-1',
+      channel: 'EMAIL' as const,
+      currency: 'USD',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
 
     const { selectTicket } = useTicketsStore.getState()
@@ -177,23 +174,22 @@ describe('Tickets Store', () => {
     const newTicketData = {
       title: 'Status Transition Test',
       description: 'Test status transitions',
-      building: 'Test Building',
-      reporter: 'Test Reporter',
-      priority: 'high' as const,
-      category: 'emergency' as const,
+      buildingId: 'building-1',
+      type: 'EMERGENCY' as const,
+      priority: 'HIGH' as const,
     }
 
     await createTicket(newTicketData)
     const ticketId = useTicketsStore.getState().tickets[0].id
 
-    // Test status progression: open -> in_progress -> resolved -> closed
-    await updateTicketStatus(ticketId, 'in_progress')
-    expect(useTicketsStore.getState().tickets[0].status).toBe('in_progress')
+    // Test status progression: OPEN -> IN_PROGRESS -> COMPLETED -> CLOSED
+    await updateTicketStatus(ticketId, 'IN_PROGRESS')
+    expect(useTicketsStore.getState().tickets[0].status).toBe('IN_PROGRESS')
 
-    await updateTicketStatus(ticketId, 'resolved')
-    expect(useTicketsStore.getState().tickets[0].status).toBe('resolved')
+    await updateTicketStatus(ticketId, 'COMPLETED')
+    expect(useTicketsStore.getState().tickets[0].status).toBe('COMPLETED')
 
-    await updateTicketStatus(ticketId, 'closed')
-    expect(useTicketsStore.getState().tickets[0].status).toBe('closed')
+    await updateTicketStatus(ticketId, 'CLOSED')
+    expect(useTicketsStore.getState().tickets[0].status).toBe('CLOSED')
   })
 })

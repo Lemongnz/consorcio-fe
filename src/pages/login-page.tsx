@@ -45,7 +45,7 @@ export function LoginPage() {
       const mockToken = 'mock-jwt-token'
 
       login(mockUser, mockToken)
-    } catch (error) {
+    } catch (_error) {
       console.error('Login error:', error)
     } finally {
       setIsLoading(false)

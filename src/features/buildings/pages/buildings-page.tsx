@@ -1,5 +1,13 @@
 import { useEffect, useState } from 'react'
-import { Plus, Building2, MapPin, Users, Layers, Edit, Trash2 } from 'lucide-react'
+import {
+  Plus,
+  Building2,
+  MapPin,
+  Users,
+  Layers,
+  Edit,
+  Trash2,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useBuildingsStore } from '../store/buildings-store'
@@ -20,7 +28,7 @@ export function BuildingsPage() {
     updateBuilding,
     deleteBuilding,
     selectBuilding,
-    clearError
+    clearError,
   } = useBuildingsStore()
 
   const [viewMode, setViewMode] = useState<ViewMode>('list')
@@ -39,7 +47,7 @@ export function BuildingsPage() {
 
   const handleUpdateBuilding = async (data: CreateBuildingData) => {
     if (editingBuilding) {
-      await updateBuilding({ ...data, id: editingBuilding.id })
+      await updateBuilding(editingBuilding.id, data)
       if (!error) {
         setViewMode('list')
         setEditingBuilding(null)
@@ -79,7 +87,7 @@ export function BuildingsPage() {
           isLoading={isLoading}
         />
         {error && (
-          <div className="mt-4 p-4 bg-destructive/10 text-destructive rounded-md">
+          <div className="mt-4 rounded-md bg-destructive/10 p-4 text-destructive">
             {error}
           </div>
         )}
@@ -97,7 +105,7 @@ export function BuildingsPage() {
           isLoading={isLoading}
         />
         {error && (
-          <div className="mt-4 p-4 bg-destructive/10 text-destructive rounded-md">
+          <div className="mt-4 rounded-md bg-destructive/10 p-4 text-destructive">
             {error}
           </div>
         )}
@@ -131,7 +139,7 @@ export function BuildingsPage() {
       </div>
 
       {error && (
-        <div className="p-4 bg-destructive/10 text-destructive rounded-md">
+        <div className="rounded-md bg-destructive/10 p-4 text-destructive">
           {error}
           <Button
             variant="outline"
@@ -145,37 +153,40 @@ export function BuildingsPage() {
       )}
 
       {isLoading ? (
-        <div className="text-center py-8">
+        <div className="py-8 text-center">
           <p>Cargando edificios...</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {buildings.map((building) => (
-            <Card key={building.id} className="hover:shadow-lg transition-shadow">
+            <Card
+              key={building.id}
+              className="transition-shadow hover:shadow-lg"
+            >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Building2 className="h-5 w-5" />
                   {building.name}
                 </CardTitle>
-                <p className="text-sm text-muted-foreground flex items-center gap-1">
+                <p className="flex items-center gap-1 text-sm text-muted-foreground">
                   <MapPin className="h-4 w-4" />
                   {building.address}
                 </p>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  <p className="text-sm text-muted-foreground line-clamp-2">
-                    {building.description}
+                  <p className="line-clamp-2 text-sm text-muted-foreground">
+                    {building.notes || 'Sin descripción disponible'}
                   </p>
-                  
+
                   <div className="flex justify-between text-sm">
                     <div className="flex items-center gap-1">
                       <Users className="h-4 w-4" />
-                      {building.units} unidades
+                      {building.totalUnits || 0} unidades
                     </div>
                     <div className="flex items-center gap-1">
                       <Layers className="h-4 w-4" />
-                      {building.floors} pisos
+                      {building.totalFloors || 0} pisos
                     </div>
                   </div>
 
@@ -211,7 +222,7 @@ export function BuildingsPage() {
       )}
 
       {buildings.length === 0 && !isLoading && (
-        <div className="text-center py-12">
+        <div className="py-12 text-center">
           <Building2 className="mx-auto h-12 w-12 text-muted-foreground" />
           <h3 className="mt-4 text-lg font-semibold">No hay edificios</h3>
           <p className="text-muted-foreground">

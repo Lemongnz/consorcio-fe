@@ -1,5 +1,6 @@
 import { create } from 'zustand'
-import {
+import { buildingsService } from '@/services/buildings.service'
+import type {
   Building,
   CreateBuildingData,
   UpdateBuildingData,
@@ -14,43 +15,19 @@ interface BuildingsState {
   // Actions
   fetchBuildings: () => Promise<void>
   createBuilding: (data: CreateBuildingData) => Promise<void>
-  updateBuilding: (data: UpdateBuildingData) => Promise<void>
+  updateBuilding: (id: string, data: UpdateBuildingData) => Promise<void>
   deleteBuilding: (id: string) => Promise<void>
   selectBuilding: (building: Building | null) => void
   clearError: () => void
 }
 
-// Mock data
-const mockBuildings: Building[] = [
-  {
-    id: '1',
-    name: 'Edificio San Martín',
-    address: 'Av. San Martín 1234, CABA',
-    description:
-      'Edificio residencial de 8 pisos con 32 unidades. Construido en 1995, cuenta con portería 24hs, ascensor y cocheras.',
-    units: 32,
-    floors: 8,
-    administrator: 'María González',
-    phone: '+54 11 4567-8901',
-    email: 'admin@sanmartin.com.ar',
-    createdAt: new Date('2023-01-15'),
-    updatedAt: new Date('2024-01-10'),
-  },
-  {
-    id: '2',
-    name: 'Torre Libertador',
-    address: 'Av. del Libertador 5678, CABA',
-    description:
-      'Moderno edificio de 15 pisos con amenities completos: gimnasio, piscina, salón de usos múltiples y seguridad 24hs.',
-    units: 60,
-    floors: 15,
-    administrator: 'Carlos Rodríguez',
-    phone: '+54 11 4567-8902',
-    email: 'admin@torrelibertador.com.ar',
-    createdAt: new Date('2023-03-20'),
-    updatedAt: new Date('2024-01-05'),
-  },
-]
+const getErrorMessage = (error: unknown, defaultMessage: string): string => {
+  if (error instanceof Error) {
+    return error.message
+  }
+  const apiError = error as { response?: { data?: { message?: string } } }
+  return apiError?.response?.data?.message || defaultMessage
+}
 
 export const useBuildingsStore = create<BuildingsState>((set) => ({
   buildings: [],
@@ -61,66 +38,69 @@ export const useBuildingsStore = create<BuildingsState>((set) => ({
   fetchBuildings: async () => {
     set({ isLoading: true, error: null })
     try {
-      // Simular API call
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      set({ buildings: mockBuildings, isLoading: false })
-    } catch (error) {
-      set({ error: 'Error al cargar edificios', isLoading: false })
+      const buildings = await buildingsService.getAll()
+      set({ buildings, isLoading: false })
+    } catch (_error) {
+      set({
+        error: getErrorMessage(error, 'Error al cargar edificios'),
+        isLoading: false,
+      })
     }
   },
 
   createBuilding: async (data: CreateBuildingData) => {
     set({ isLoading: true, error: null })
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      const newBuilding: Building = {
-        ...data,
-        id: Date.now().toString(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }
+      const newBuilding = await buildingsService.create(data)
       set((state) => ({
         buildings: [...state.buildings, newBuilding],
         isLoading: false,
       }))
-    } catch (error) {
-      set({ error: 'Error al crear edificio', isLoading: false })
+    } catch (_error) {
+      set({
+        error: getErrorMessage(error, 'Error al crear edificio'),
+        isLoading: false,
+      })
     }
   },
 
-  updateBuilding: async (data: UpdateBuildingData) => {
+  updateBuilding: async (id: string, data: UpdateBuildingData) => {
     set({ isLoading: true, error: null })
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500))
+      const updatedBuilding = await buildingsService.update(id, data)
       set((state) => ({
         buildings: state.buildings.map((building) =>
-          building.id === data.id
-            ? { ...building, ...data, updatedAt: new Date() }
-            : building
+          building.id === id ? updatedBuilding : building
         ),
         selectedBuilding:
-          state.selectedBuilding?.id === data.id
-            ? { ...state.selectedBuilding, ...data, updatedAt: new Date() }
+          state.selectedBuilding?.id === id
+            ? updatedBuilding
             : state.selectedBuilding,
         isLoading: false,
       }))
-    } catch (error) {
-      set({ error: 'Error al actualizar edificio', isLoading: false })
+    } catch (_error) {
+      set({
+        error: getErrorMessage(error, 'Error al actualizar edificio'),
+        isLoading: false,
+      })
     }
   },
 
   deleteBuilding: async (id: string) => {
     set({ isLoading: true, error: null })
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500))
+      await buildingsService.delete(id)
       set((state) => ({
         buildings: state.buildings.filter((building) => building.id !== id),
         selectedBuilding:
           state.selectedBuilding?.id === id ? null : state.selectedBuilding,
         isLoading: false,
       }))
-    } catch (error) {
-      set({ error: 'Error al eliminar edificio', isLoading: false })
+    } catch (_error) {
+      set({
+        error: getErrorMessage(error, 'Error al eliminar edificio'),
+        isLoading: false,
+      })
     }
   },
 

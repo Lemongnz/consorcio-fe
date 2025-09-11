@@ -1,24 +1,14 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { CreateTicketData, TICKET_PRIORITY_LABELS } from '../types/ticket'
 import {
-  CreateTicketData,
-  TICKET_PRIORITY_LABELS,
-  TICKET_CATEGORY_LABELS,
-} from '../types/ticket'
-
-const ticketSchema = z.object({
-  title: z.string().min(1, 'El título es requerido'),
-  description: z.string().min(1, 'La descripción es requerida'),
-  priority: z.enum(['low', 'medium', 'high', 'urgent']),
-  category: z.enum(['maintenance', 'complaint', 'request', 'emergency']),
-  building: z.string().min(1, 'El edificio es requerido'),
-  unit: z.string().optional(),
-  reporter: z.string().min(1, 'El reportero es requerido'),
-})
+  legacyTicketSchema,
+  LegacyTicketFormData,
+  convertLegacyToApi,
+} from '../schemas/ticket-schema'
 
 interface TicketFormProps {
   onSubmit: (data: CreateTicketData) => void
@@ -31,13 +21,18 @@ export function TicketForm({ onSubmit, onCancel, isLoading }: TicketFormProps) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateTicketData>({
-    resolver: zodResolver(ticketSchema),
+  } = useForm<LegacyTicketFormData>({
+    resolver: zodResolver(legacyTicketSchema),
     defaultValues: {
       priority: 'medium',
       category: 'request',
     },
   })
+
+  const handleFormSubmit = (data: LegacyTicketFormData) => {
+    const apiData = convertLegacyToApi(data)
+    onSubmit(apiData)
+  }
 
   return (
     <Card>
@@ -45,7 +40,7 @@ export function TicketForm({ onSubmit, onCancel, isLoading }: TicketFormProps) {
         <CardTitle>Nuevo Ticket</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="md:col-span-2">
               <label className="text-sm font-medium">Título</label>
@@ -98,13 +93,10 @@ export function TicketForm({ onSubmit, onCancel, isLoading }: TicketFormProps) {
                 {...register('category')}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {Object.entries(TICKET_CATEGORY_LABELS).map(
-                  ([value, label]) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  )
-                )}
+                <option value="maintenance">Mantenimiento</option>
+                <option value="complaint">Reclamo</option>
+                <option value="request">Solicitud</option>
+                <option value="emergency">Emergencia</option>
               </select>
               {errors.category && (
                 <p className="mt-1 text-sm text-destructive">

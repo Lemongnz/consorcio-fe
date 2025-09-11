@@ -107,7 +107,7 @@ export function TicketsPage() {
           <CardContent className="p-6">
             <div className="text-center">
               <p className="text-2xl font-bold text-blue-600">
-                {tickets.filter((t) => t.status === 'open').length}
+                {tickets.filter((t) => t.status === 'OPEN').length}
               </p>
               <p className="text-sm text-muted-foreground">Abiertos</p>
             </div>
@@ -117,7 +117,7 @@ export function TicketsPage() {
           <CardContent className="p-6">
             <div className="text-center">
               <p className="text-2xl font-bold text-yellow-600">
-                {tickets.filter((t) => t.status === 'in_progress').length}
+                {tickets.filter((t) => t.status === 'IN_PROGRESS').length}
               </p>
               <p className="text-sm text-muted-foreground">En Progreso</p>
             </div>
@@ -127,7 +127,7 @@ export function TicketsPage() {
           <CardContent className="p-6">
             <div className="text-center">
               <p className="text-2xl font-bold text-green-600">
-                {tickets.filter((t) => t.status === 'resolved').length}
+                {tickets.filter((t) => t.status === 'COMPLETED').length}
               </p>
               <p className="text-sm text-muted-foreground">Resueltos</p>
             </div>
@@ -169,16 +169,16 @@ export function TicketsPage() {
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
                       <div className="flex items-center gap-1">
                         <Building2 className="h-4 w-4" />
-                        {ticket.building}
-                        {ticket.unit && ` - ${ticket.unit}`}
+                        Edificio {ticket.buildingId}
+                        {ticket.unitId && ` - ${ticket.unitId}`}
                       </div>
                       <div className="flex items-center gap-1">
                         <User className="h-4 w-4" />
-                        {ticket.reporter}
+                        Usuario
                       </div>
                       <div className="flex items-center gap-1">
                         <Calendar className="h-4 w-4" />
-                        {ticket.createdAt.toLocaleDateString()}
+                        {new Date(ticket.createdAt).toLocaleDateString()}
                       </div>
                     </div>
                   </div>
@@ -186,37 +186,37 @@ export function TicketsPage() {
                   <div className="flex items-center gap-2">
                     {/* Status Change Buttons */}
                     <div className="flex gap-1">
-                      {ticket.status !== 'in_progress' && (
+                      {ticket.status !== 'IN_PROGRESS' && (
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() =>
-                            handleStatusChange(ticket.id, 'in_progress')
+                            handleStatusChange(ticket.id, 'IN_PROGRESS')
                           }
                           disabled={isLoading}
                         >
                           En Progreso
                         </Button>
                       )}
-                      {ticket.status !== 'resolved' &&
-                        ticket.status !== 'closed' && (
+                      {ticket.status !== 'COMPLETED' &&
+                        ticket.status !== 'CLOSED' && (
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() =>
-                              handleStatusChange(ticket.id, 'resolved')
+                              handleStatusChange(ticket.id, 'COMPLETED')
                             }
                             disabled={isLoading}
                           >
                             Resolver
                           </Button>
                         )}
-                      {ticket.status === 'resolved' && (
+                      {ticket.status === 'COMPLETED' && (
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() =>
-                            handleStatusChange(ticket.id, 'closed')
+                            handleStatusChange(ticket.id, 'CLOSED')
                           }
                           disabled={isLoading}
                         >
