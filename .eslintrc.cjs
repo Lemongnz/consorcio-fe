@@ -12,7 +12,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
   ],
-  ignorePatterns: ['dist'],
+  ignorePatterns: ['dist', 'node_modules', 'commitlint.config.cjs'],
   rules: {
     'react-refresh/only-export-components': [
       'warn',

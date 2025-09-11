@@ -35,3 +35,6 @@ coverage
 
 # OS generated files
 Thumbs.db
+
+
+commitlint.config.cjs
