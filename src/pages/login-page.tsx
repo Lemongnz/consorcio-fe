@@ -46,7 +46,7 @@ export function LoginPage() {
 
       login(mockUser, mockToken)
     } catch (_error) {
-      console.error('Login error:', error)
+      console.error('Login error:', _error)
     } finally {
       setIsLoading(false)
     }

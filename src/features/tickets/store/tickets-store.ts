@@ -44,7 +44,7 @@ export const useTicketsStore = create<TicketsState>((set) => ({
       set({ tickets, isLoading: false })
     } catch (_error) {
       set({
-        error: getErrorMessage(error, 'Error al cargar tickets'),
+        error: getErrorMessage(_error, 'Error al cargar tickets'),
         isLoading: false,
       })
     }
@@ -60,7 +60,7 @@ export const useTicketsStore = create<TicketsState>((set) => ({
       }))
     } catch (_error) {
       set({
-        error: getErrorMessage(error, 'Error al crear ticket'),
+        error: getErrorMessage(_error, 'Error al crear ticket'),
         isLoading: false,
       })
     }
@@ -82,7 +82,7 @@ export const useTicketsStore = create<TicketsState>((set) => ({
       }))
     } catch (_error) {
       set({
-        error: getErrorMessage(error, 'Error al actualizar ticket'),
+        error: getErrorMessage(_error, 'Error al actualizar ticket'),
         isLoading: false,
       })
     }
@@ -104,7 +104,7 @@ export const useTicketsStore = create<TicketsState>((set) => ({
       }))
     } catch (_error) {
       set({
-        error: getErrorMessage(error, 'Error al actualizar estado del ticket'),
+        error: getErrorMessage(_error, 'Error al actualizar estado del ticket'),
         isLoading: false,
       })
     }
@@ -122,7 +122,7 @@ export const useTicketsStore = create<TicketsState>((set) => ({
       }))
     } catch (_error) {
       set({
-        error: getErrorMessage(error, 'Error al eliminar ticket'),
+        error: getErrorMessage(_error, 'Error al eliminar ticket'),
         isLoading: false,
       })
     }

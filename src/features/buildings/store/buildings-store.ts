@@ -42,7 +42,7 @@ export const useBuildingsStore = create<BuildingsState>((set) => ({
       set({ buildings, isLoading: false })
     } catch (_error) {
       set({
-        error: getErrorMessage(error, 'Error al cargar edificios'),
+        error: getErrorMessage(_error, 'Error al cargar edificios'),
         isLoading: false,
       })
     }
@@ -58,7 +58,7 @@ export const useBuildingsStore = create<BuildingsState>((set) => ({
       }))
     } catch (_error) {
       set({
-        error: getErrorMessage(error, 'Error al crear edificio'),
+        error: getErrorMessage(_error, 'Error al crear edificio'),
         isLoading: false,
       })
     }
@@ -80,7 +80,7 @@ export const useBuildingsStore = create<BuildingsState>((set) => ({
       }))
     } catch (_error) {
       set({
-        error: getErrorMessage(error, 'Error al actualizar edificio'),
+        error: getErrorMessage(_error, 'Error al actualizar edificio'),
         isLoading: false,
       })
     }
@@ -98,7 +98,7 @@ export const useBuildingsStore = create<BuildingsState>((set) => ({
       }))
     } catch (_error) {
       set({
-        error: getErrorMessage(error, 'Error al eliminar edificio'),
+        error: getErrorMessage(_error, 'Error al eliminar edificio'),
         isLoading: false,
       })
     }
